@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  allowedDevOrigins: [
+    '*.orchids.cloud',
+    '*.daytonaproxy01.net',
+    '*.proxy.daytona.works',
+  ],
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
   typescript: {
     ignoreBuildErrors: true,
@@ -26,11 +31,11 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     rules: {
-      "*.{jsx,tsx}": {
-        loaders: [loaderPath]
-      }
-    }
-  }
+      '*.{jsx,tsx}': {
+        loaders: [loaderPath],
+      },
+    },
+  },
 } as NextConfig;
 
 export default nextConfig;
