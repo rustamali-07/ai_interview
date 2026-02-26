@@ -51,7 +51,7 @@ export function useInterviewSession() {
   const finalizeSession = useCallback(
     async (sessionId: string) => {
       const { transcript, setup, startTime } = store;
-      if (!setup || !transcript.length) return;
+      if (!setup) return;
 
       store.endInterview();
       store.setIsScoring(true);

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/firebase";
-import { doc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,25 +10,45 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "sessionId required" }, { status: 400 });
     }
 
-    const docRef = doc(db, "interviews", sessionId);
-
     if (action === "create") {
-      await setDoc(docRef, {
-        ...data,
-        createdAt: Date.now(),
+      const { error } = await supabase.from("interviews").insert({
+        id: sessionId,
+        user_id: data.userId,
+        role: data.role,
+        difficulty: data.difficulty,
+        type: data.type,
+        question_count: data.questionCount,
+        transcript: [],
+        duration: 0,
         status: "in-progress",
       });
+
+      if (error) throw error;
     } else if (action === "update") {
-      await updateDoc(docRef, {
-        ...data,
-        updatedAt: Date.now(),
-      });
+      const updateData: Record<string, unknown> = {};
+      if (data.status) updateData.status = data.status;
+      if (data.transcript) updateData.transcript = data.transcript;
+      if (data.duration !== undefined) updateData.duration = data.duration;
+
+      const { error } = await supabase
+        .from("interviews")
+        .update(updateData)
+        .eq("id", sessionId);
+
+      if (error) throw error;
     } else if (action === "complete") {
-      await updateDoc(docRef, {
-        ...data,
-        status: "completed",
-        completedAt: Date.now(),
-      });
+      const { error } = await supabase
+        .from("interviews")
+        .update({
+          transcript: data.transcript,
+          score: data.score,
+          duration: data.duration,
+          status: "completed",
+          completed_at: new Date().toISOString(),
+        })
+        .eq("id", sessionId);
+
+      if (error) throw error;
     }
 
     return NextResponse.json({ success: true });

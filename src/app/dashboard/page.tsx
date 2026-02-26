@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useUser } from "@clerk/nextjs";
-import { collection, query, where, orderBy, getDocs, limit } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { InterviewSession } from "@/types";
 import { Navbar } from "@/components/shared/Navbar";
 import { StatsCard } from "@/components/dashboard/StatsCard";
@@ -42,19 +40,11 @@ export default function DashboardPage() {
 
     const fetchSessions = async () => {
       try {
-        const q = query(
-          collection(db, "interviews"),
-          where("userId", "==", user.id),
-          where("status", "==", "completed"),
-          orderBy("createdAt", "desc"),
-          limit(20)
+        const res = await fetch(
+          `/api/interview/list?userId=${user.id}&status=completed&limit=20`
         );
-        const snapshot = await getDocs(q);
-        const data = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as InterviewSession[];
-        setSessions(data);
+        const data = await res.json();
+        setSessions(data.sessions || []);
       } catch (err) {
         console.error("Failed to fetch sessions:", err);
         setSessions([]);
@@ -70,8 +60,8 @@ export default function DashboardPage() {
   const avgScore =
     sessions.length > 0
       ? Math.round(
-          sessions.reduce((sum, s) => sum + (s.score?.totalScore ?? 0), 0) / sessions.length
-        )
+        sessions.reduce((sum, s) => sum + (s.score?.totalScore ?? 0), 0) / sessions.length
+      )
       : 0;
   const totalTime = sessions.reduce((sum, s) => sum + (s.duration ?? 0), 0);
   const bestScore = sessions.length > 0 ? Math.max(...sessions.map((s) => s.score?.totalScore ?? 0)) : 0;
@@ -126,7 +116,7 @@ export default function DashboardPage() {
             </p>
           </div>
           <Link href="/interview/setup">
-            <Button className="bg-gradient-to-r from-teal-500 to-violet-500 text-white border-0 hover:opacity-90">
+            <Button className="bg-white text-[#0a0f1e] hover:bg-white/90 border-0 shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-shadow font-bold">
               <Play className="h-4 w-4 mr-2" />
               New Interview
             </Button>
@@ -144,8 +134,8 @@ export default function DashboardPage() {
               totalTime > 3600
                 ? `${Math.floor(totalTime / 3600)}h ${Math.floor((totalTime % 3600) / 60)}m`
                 : totalTime > 60
-                ? `${Math.floor(totalTime / 60)}m`
-                : `${totalTime}s`
+                  ? `${Math.floor(totalTime / 60)}m`
+                  : `${totalTime}s`
             }
             icon={Clock}
             index={3}
@@ -261,7 +251,7 @@ export default function DashboardPage() {
               Practice with our AI interviewer and get detailed feedback to improve your chances.
             </p>
             <Link href="/interview/setup" className="mt-6">
-              <Button className="bg-gradient-to-r from-teal-500 to-violet-500 text-white border-0 hover:opacity-90">
+              <Button className="bg-white text-[#0a0f1e] hover:bg-white/90 border-0 shadow-[0_0_20px_rgba(255,255,255,0.3)] font-bold">
                 Start Now <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>

@@ -21,7 +21,7 @@ export function TranscriptPanel({ transcript, className }: TranscriptPanelProps)
   }, [transcript]);
 
   return (
-    <div className={cn("flex flex-col h-full", className)}>
+    <div className={cn("flex flex-col h-full overflow-hidden", className)}>
       <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06]">
         <div className="h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
         <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
@@ -29,7 +29,7 @@ export function TranscriptPanel({ transcript, className }: TranscriptPanelProps)
         </span>
       </div>
 
-      <ScrollArea className="flex-1 px-4 py-3">
+      <ScrollArea className="flex-1 min-h-0 px-4 py-3">
         {transcript.length === 0 ? (
           <div className="flex items-center justify-center h-32 text-slate-600 text-sm">
             Transcript will appear here...

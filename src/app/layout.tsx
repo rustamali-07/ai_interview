@@ -17,7 +17,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MockAI — AI-Powered Mock Interviews",
+  title: "SkillForge — AI-Powered Mock Interviews",
   description:
     "Practice job interviews with AI. Get real-time voice interviews, live transcription, and detailed scoring feedback tailored to your target role.",
 };

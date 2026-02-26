@@ -3,15 +3,13 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useUser } from "@clerk/nextjs";
-import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { InterviewSession, Difficulty } from "@/types";
 import { Navbar } from "@/components/shared/Navbar";
 import { DifficultyBadge } from "@/components/shared/DifficultyBadge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-import { formatDistanceToNow, format } from "date-fns";
+import { format } from "date-fns";
 import { Clock, ChevronRight, Play, Filter, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -40,17 +38,9 @@ export default function HistoryPage() {
     if (!user) return;
     const fetchSessions = async () => {
       try {
-        const q = query(
-          collection(db, "interviews"),
-          where("userId", "==", user.id),
-          orderBy("createdAt", "desc")
-        );
-        const snapshot = await getDocs(q);
-        const data = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as InterviewSession[];
-        setSessions(data);
+        const res = await fetch(`/api/interview/list?userId=${user.id}`);
+        const data = await res.json();
+        setSessions(data.sessions || []);
       } catch (err) {
         console.error("Failed to fetch history:", err);
         setSessions([]);
@@ -87,7 +77,7 @@ export default function HistoryPage() {
             </p>
           </div>
           <Link href="/interview/setup">
-            <Button className="bg-gradient-to-r from-teal-500 to-violet-500 text-white border-0 hover:opacity-90">
+            <Button className="bg-white text-[#0a0f1e] hover:bg-white/90 border-0 shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-shadow font-bold">
               <Play className="h-4 w-4 mr-2" />
               New Interview
             </Button>
@@ -146,7 +136,7 @@ export default function HistoryPage() {
               <Link href="/interview/setup">
                 <Button
                   size="sm"
-                  className="bg-gradient-to-r from-teal-500 to-violet-500 text-white border-0"
+                  className="bg-white text-[#0a0f1e] hover:bg-white/90 border-0 shadow-[0_0_20px_rgba(255,255,255,0.3)] font-bold"
                 >
                   Start your first interview
                 </Button>

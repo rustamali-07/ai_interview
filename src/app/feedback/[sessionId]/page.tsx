@@ -4,8 +4,6 @@ import { use, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { useInterviewStore } from "@/store/interviewStore";
 import { InterviewSession } from "@/types";
 import { Navbar } from "@/components/shared/Navbar";
@@ -44,8 +42,10 @@ export default function FeedbackPage({ params }: FeedbackPageProps) {
   const [showCelebration, setShowCelebration] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     const load = async () => {
-      // Try store first
+      // Try store first (immediate post-interview)
       if (store.sessionId === sessionId && store.score) {
         setSession({
           id: sessionId,
@@ -64,21 +64,36 @@ export default function FeedbackPage({ params }: FeedbackPageProps) {
         return;
       }
 
-      // Fetch from Firestore
-      try {
-        const docRef = doc(db, "interviews", sessionId);
-        const snap = await getDoc(docRef);
-        if (snap.exists()) {
-          setSession({ id: snap.id, ...snap.data() } as InterviewSession);
+      // Poll Supabase until score arrives (max 10 × 3s = 30s)
+      let attempts = 0;
+      const poll = async (): Promise<void> => {
+        if (cancelled) return;
+        try {
+          const res = await fetch(`/api/interview/${sessionId}`);
+          const data = await res.json();
+          if (data.session?.score) {
+            if (!cancelled) {
+              setSession(data.session as InterviewSession);
+              setIsLoading(false);
+            }
+            return;
+          }
+        } catch (err) {
+          console.error("Failed to load session:", err);
         }
-      } catch (err) {
-        console.error("Failed to load session:", err);
-      } finally {
-        setIsLoading(false);
-      }
+        attempts++;
+        if (attempts < 10) {
+          setTimeout(poll, 3000);
+        } else {
+          if (!cancelled) setIsLoading(false);
+        }
+      };
+
+      poll();
     };
 
     load();
+    return () => { cancelled = true; };
   }, [sessionId, store, user]);
 
   // Dismiss celebration after 2.5s
