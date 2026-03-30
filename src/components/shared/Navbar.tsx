@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
-import { Brain, LayoutDashboard, History, Play } from "lucide-react";
+import { Brain, LayoutDashboard, History, Play, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/interview/setup", label: "Practice", icon: Play },
   { href: "/history", label: "History", icon: History },
+  { href: "/pricing", label: "Pricing", icon: CreditCard },
 ];
 
 export function Navbar() {
@@ -37,8 +38,8 @@ export function Navbar() {
                   key={href}
                   href={href}
                   className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${pathname === href
-                      ? "bg-blue-500/15 text-blue-400 border border-blue-500/20"
-                      : "text-slate-400 hover:text-white hover:bg-white/[0.06]"
+                    ? "bg-blue-500/15 text-blue-400 border border-blue-500/20"
+                    : "text-slate-400 hover:text-white hover:bg-white/[0.06]"
                     }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -51,6 +52,12 @@ export function Navbar() {
           {/* Right side */}
           <div className="flex items-center gap-3">
             <SignedOut>
+              <Link
+                href="/pricing"
+                className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
+              >
+                Pricing
+              </Link>
               <Link href="/sign-in">
                 <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white hover:bg-white/[0.06]">
                   Sign in

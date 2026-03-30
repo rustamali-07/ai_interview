@@ -19,12 +19,10 @@ import {
   BookOpen,
   Users,
   GraduationCap,
-  Github,
-  Twitter,
-  Linkedin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/shared/Navbar";
+import { Footer } from "@/components/shared/Footer";
 
 const features = [
   {
@@ -601,55 +599,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.06] bg-[#060a14] px-4 py-10">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            {/* Logo + tagline */}
-            <div className="flex flex-col items-center md:items-start gap-2">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-violet-600">
-                  <Brain className="h-3.5 w-3.5 text-white" />
-                </div>
-                <span className="font-black text-white text-base">SkillForge</span>
-              </div>
-              <p className="text-xs text-slate-500">
-                Powered by Google Gemini • Built for students and job seekers
-              </p>
-            </div>
-
-            {/* Links */}
-            <div className="flex items-center gap-6 text-xs text-slate-500">
-              <Link href="#features" className="hover:text-white transition-colors">Features</Link>
-              <Link href="#" className="hover:text-white transition-colors">Privacy</Link>
-              <Link href="#" className="hover:text-white transition-colors">Terms</Link>
-            </div>
-
-            {/* Social links */}
-            <div className="flex items-center gap-3">
-              {[
-                { icon: Github, href: "#" },
-                { icon: Twitter, href: "#" },
-                { icon: Linkedin, href: "#" },
-              ].map(({ icon: Icon, href }, i) => (
-                <Link
-                  key={i}
-                  href={href}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.02] text-slate-500 hover:text-white hover:bg-white/[0.06] hover:border-white/[0.12] transition-all"
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Bottom divider + copyright */}
-          <div className="mt-8 pt-6 border-t border-white/[0.04] text-center">
-            <p className="text-xs text-slate-600">
-              © 2026 SkillForge. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

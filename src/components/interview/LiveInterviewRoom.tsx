@@ -45,7 +45,7 @@ export function LiveInterviewRoom({ sessionId }: LiveInterviewRoomProps) {
   const { finalizeSession, abandonSession } = useInterviewSession();
 
   const setup = store.setup;
-  const { connect, disconnect, isProcessing, isListening, toggleMute, callId } =
+  const { connect, disconnect, isProcessing, isListening, toggleMute } =
     useInterviewAI(setup);
 
   const [isConnecting, setIsConnecting] = useState(true);
@@ -145,8 +145,8 @@ export function LiveInterviewRoom({ sessionId }: LiveInterviewRoomProps) {
     setShowEndDialog(false);
     disconnect();
     stopWebcam();
-    await finalizeSession(sessionId, callId);
-  }, [disconnect, stopWebcam, finalizeSession, sessionId, callId]);
+    await finalizeSession(sessionId);
+  }, [disconnect, stopWebcam, finalizeSession, sessionId]);
 
   const handleAbandon = useCallback(async () => {
     setShowEndDialog(false);

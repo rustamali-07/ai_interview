@@ -3,15 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/shared/Navbar";
 import { RoleSelector } from "@/components/shared/RoleSelector";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useInterviewSession } from "@/hooks/useInterviewSession";
 import {
-  Difficulty,
-  InterviewType,
   DIFFICULTIES,
   INTERVIEW_TYPES,
   QUESTION_COUNTS,
@@ -73,7 +71,7 @@ export default function InterviewSetupPage() {
     try {
       const sessionId = await createSession(setup as InterviewSetup, user.id);
       router.push(`/interview/${sessionId}`);
-    } catch (err) {
+    } catch {
       toast.error("Failed to create interview session");
       setIsStarting(false);
     }
@@ -113,8 +111,8 @@ export default function InterviewSetupPage() {
                   step === s.id
                     ? "bg-teal-500/20 border border-teal-500/40 text-teal-300"
                     : s.id < step
-                    ? "bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 cursor-pointer"
-                    : "bg-white/[0.04] border border-white/[0.06] text-slate-600"
+                      ? "bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 cursor-pointer"
+                      : "bg-white/[0.04] border border-white/[0.06] text-slate-600"
                 )}
               >
                 {s.id < step ? (

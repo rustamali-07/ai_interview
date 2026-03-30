@@ -22,7 +22,6 @@ import {
   PartyPopper,
   Clock,
   MessageSquare,
-  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";

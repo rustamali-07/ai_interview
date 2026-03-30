@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useInterviewStore } from "@/store/interviewStore";
 import { useUserStore } from "@/store/userStore";
