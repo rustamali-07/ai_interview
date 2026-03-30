@@ -38,7 +38,7 @@ export function Footer() {
                         {/* GitHub */}
                         <div className="mt-4">
                             <Link
-                                href="https://github.com/rustamali-07/ai_interview"
+                                href="https://github.com/rustamali-07/skill_forge"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-slate-500 hover:text-white hover:bg-white/[0.06] hover:border-white/[0.12] transition-all text-xs"
@@ -109,7 +109,7 @@ export function Footer() {
                         © {new Date().getFullYear()} SkillForge. All rights reserved.
                     </p>
                     <Link
-                        href="https://github.com/rustamali-07/ai_interview"
+                        href="https://github.com/rustamali-07/skill_forge"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-400 transition-colors"
